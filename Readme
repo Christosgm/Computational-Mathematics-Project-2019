@@ -1,6 +1,6 @@
 Compile using the command: gcc -o filename filename.c -lm
 
-euler_1b.c runs with fx, fy, nz as arguments.
+euler_1b.c runs with fx, fy, nz as arguments. i.e ./euler_1b.c 3496 0 0
 euler_1d.c runs without arguments
 
 A.M = 3496
