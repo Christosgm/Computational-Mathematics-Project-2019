@@ -22,7 +22,7 @@ col5 = y'(t).
 col6 = c(t).
 col7 = c'(t).
 
-Run Plotting.m in Matlab to draw the plots of the files that are created throu the programs.
+Run Plotting.m in Matlab to draw the plots of the files that are created through the programs.
 
 Problem 1
 a)Write how the functions came to be(in pdf form). //Explain the number deviation due to arithmetic accumulative errors!
