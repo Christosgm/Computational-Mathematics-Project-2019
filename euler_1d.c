@@ -87,21 +87,21 @@ int main(int argc, char * argv[])
 
 	printf("Opening file...\n");
 
+	char * filename;
+
 	if(choice == 1)
 	{
-		//If anything goes bad return -1.
-		if((plot_data = fopen("plot_data_nl-e-cl.txt", "w")) == NULL)
-		{
-			return 1;
-		}
+		filename = "plot_data_nl-e-cl.txt";
 	}
 	else
 	{
-		//If anything goes bad return -1.
-		if((plot_data = fopen("plot_data_nl-i-cl.txt", "w")) == NULL)
-		{
-			return 1;
-		}
+		filename = "plot_data_nl-i-cl.txt";
+	}
+
+	//If anything goes bad return -1.
+	if((plot_data = fopen(filename, "w")) == NULL)
+	{
+		return 1;
 	}
 
 	int k; //Number of loops.
