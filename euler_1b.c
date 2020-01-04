@@ -5,7 +5,7 @@
 
 
 //Compute the derivative.
-double call_fun(int position, long double  x1, long double  x2, long double  y1, long double  y2, long double  c1, long double  c2, long double  fx, long double fy, long double  nz)
+double der(int position, long double  x1, long double  x2, long double  y1, long double  y2, long double  c1, long double  c2, long double  fx, long double fy, long double  nz)
 {
 
 	//Constants
@@ -56,11 +56,24 @@ int main(int argc, char * argv[])
 	//The vector [fx, fy, nz] is passed as argument values according to the user.
 	//In the assignment only [3496, 0, 0], [0, -3496, 0] and [0, 0, -3496] are needed.
 
+
+	//If there are not enough arguments exit.
 	if(argc < 4)
 	{
-		printf("Not enough arguments. Exiting...");
+		printf("Not enough arguments. Exiting...\n");
 		exit(-1);
-	} 
+	}
+
+	//Open file for data ploitting.
+	FILE *plot_data;
+
+	printf("Opening file...\n");
+
+	//If anything goes bad return -1;
+	if((plot_data = fopen("plot_data_1b.txt", "w")) == NULL)
+	{
+		return -1;
+	}
 
 	//Starting values of [x1, x2, y1, y2, c1, c2].
 	long double  solutions[6] = {3.496, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -90,12 +103,12 @@ int main(int argc, char * argv[])
 		//Compute the derivative for each of the vector's position. [x1', x2', y1', y2', c1', c2'] 
 		for(position = 0; position < 6; position++)
 		{
-			functions[position] = call_fun(position, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5], atof(argv[1]), atof(argv[2]), atof(argv[3]));
+			functions[position] = der(position, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5], atof(argv[1]), atof(argv[2]), atof(argv[3]));
 			
-			//if Improved Euler's Method was chosen, then the computation of [x1 + (h/2)*x1',x2 + (h/2)*x2', y1 + (h/2)*y1', y1 + (h/2)*y2', c1 + (h/2)*c1', c1 + (h/2)*c2'] is also needed.
+			//if Improved Euler's Method was chosen, then the computation of [x1 + (h/2)*x1',x2 + (h/2)*x2', y1 + (h/2)*y1', y2 + (h/2)*y2', c1 + (h/2)*c1', c2 + (h/2)*c2'] is also needed.
 			if(choice == 2)
 			{
-				functions[position] = call_fun(position, solutions[0] + (h/2)*functions[position], solutions[1]+ (h/2)*functions[position], solutions[2]+ (h/2)*functions[position], solutions[3] + (h/2)*functions[position], solutions[4] + (h/2)*functions[position], solutions[5]+ (h/2)*functions[position], atof(argv[1]), atof(argv[2]), atof(argv[3]));
+				functions[position] = der(position, solutions[0] + (h/2)*functions[position], solutions[1]+ (h/2)*functions[position], solutions[2]+ (h/2)*functions[position], solutions[3] + (h/2)*functions[position], solutions[4] + (h/2)*functions[position], solutions[5]+ (h/2)*functions[position], atof(argv[1]), atof(argv[2]), atof(argv[3]));
 			}
 		}
 
@@ -103,6 +116,9 @@ int main(int argc, char * argv[])
 		if(k == 0)
 		{
 			printf("t = %Lf: [x1=%Lf x2=%Lf y1=%Lf y2=%Lf c1=%Lf c2=%Lf]\n", k*h, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5]);
+
+			//Write values to file.
+			fprintf(plot_data, "%.1Lf %.15Lf %.15Lf %.15Lf %.15Lf %.15Lf %.15Lf\n", k*h, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5]);
 		}
 		else
 		{
@@ -115,9 +131,18 @@ int main(int argc, char * argv[])
 
 			//Show each vector.
 			printf("t = %.1Lf: [x1=%.15Lf x2=%.15Lf y1=%.15Lf y2=%.15Lf c1=%.15Lf c2=%.15Lf]\n", k*h, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5]);
+
+			//Write values to file.
+			fprintf(plot_data, "%.1Lf %.15Lf %.15Lf %.15Lf %.15Lf %.15Lf %.15Lf\n", k*h, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5]);
+
 		}
 
 	}
+
+	//Close the file.
+	fclose(plot_data);
+
+	printf("File written successfully!\n");
 
 	return 0;
 }
