@@ -5,7 +5,7 @@
 
 
 //Compute the derivative.
-double der(int position, long double  x1, long double  x2, long double  y1, long double  y2, long double  c1, long double  c2, long double  fx, long double fy, long double  nz)
+double der(int position, long double  x1, long double  x2, long double  y1, long double  y2, long double  c1, long double  c2, int o)
 {
 
 	//Constants
@@ -15,6 +15,29 @@ double der(int position, long double  x1, long double  x2, long double  y1, long
 	long double  m = 425000.0;
 	long double  ma = 113000.0; 
 	long double  mz = 357000000.0;
+
+	long double fx;
+	long double fy;
+	long double nz;
+
+	if(o ==1)
+	{
+		fx = 3496.0;
+		fy = 0.0;
+		nz = 0.0;
+	}
+	else if(o == 2)
+	{
+		fx = 0.0;
+		fy = -3496.0;
+		nz = 0.0;
+	}
+	else
+	{
+		fx = 0.0;
+		fy = 0.0;
+		nz = -3496.0;
+	}
 
 	//Functions for each of the vector's [x1', x2', y1', y2', c1', c2'] position.
 	if(position == 0)
@@ -53,27 +76,8 @@ double der(int position, long double  x1, long double  x2, long double  y1, long
 int main(int argc, char * argv[])
 {
 
-	//The vector [fx, fy, nz] is passed as argument values according to the user.
-	//In the assignment only [3496, 0, 0], [0, -3496, 0] and [0, 0, -3496] are needed.
-
-
-	//If there are not enough arguments exit.
-	if(argc < 4)
-	{
-		printf("Not enough arguments. Exiting...\n");
-		exit(-1);
-	}
-
-	//Open file for data ploitting.
-	FILE *plot_data;
-
-	printf("Opening file...\n");
-
-	//If anything goes bad return -1;
-	if((plot_data = fopen("plot_data_1b.txt", "w")) == NULL)
-	{
-		return -1;
-	}
+	//The vector [fx, fy, nz] is the forces.
+	//For the assignment only [3496, 0, 0], [0, -3496, 0] and [0, 0, -3496] are needed.
 
 	//Starting values of [x1, x2, y1, y2, c1, c2].
 	long double  solutions[6] = {3.496, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -83,6 +87,16 @@ int main(int argc, char * argv[])
 
 	//The step of Euler's Method.
 	long double  h = 0.1;
+
+	//Choose between 1st, 2nd or 3d option.
+	int o;
+	printf("(1): [fx, fy, nz] = [3496, 0, 0]\n(2): [fx, fy, nz] = [0, -3496, 0]\n(3): [fx, fy, nz] = [0, 0, -3496]\nChoice: ");
+	do
+	{
+		scanf("%d", &o);
+		printf("Please enter 1, 2 or 3...\nChoice: ");
+	}
+	while(o == 1 && o == 2 && o == 3);
 
 	//Choose between Euler's and Improved Euler's Method.
 	int choice;
@@ -94,6 +108,52 @@ int main(int argc, char * argv[])
 	}
 	while(choice == 1 && choice == 2);
 
+	//Open file for data ploitting.
+	FILE *plot_data;
+
+	printf("Opening file...\n");
+
+	char * filename;
+
+	//Depending on the choice and option the data filename changes.
+	if(choice ==1)
+	{
+		if(o == 1)
+		{
+			filename = "plot_data_nl-e-ox.txt";
+		}
+		else if(o == 2)
+		{
+			filename = "plot_data_nl-e-oy.txt";
+		}
+		else
+		{
+			filename = "plot_data_nl-e-oz.txt";
+		}
+	}
+	else
+	{
+		if(o == 1)
+		{
+			filename = "plot_data_nl-i-ox.txt";
+		}
+		else if(o == 2)
+		{
+			filename = "plot_data_nl-i-oy.txt";
+		}
+		else
+		{
+			filename = "plot_data_nl-i-oz.txt";
+		}
+	}
+
+	//If anything goes bad return -1;
+	if((plot_data = fopen(filename, "w")) == NULL)
+	{
+		return -1;
+	}
+
+
 	int k; //Number of loops.
 	for(k = 0; k<=6000; k++)//For 6000 loops (We want time equal to 600 and the step is 0.1)
 	{
@@ -103,12 +163,12 @@ int main(int argc, char * argv[])
 		//Compute the derivative for each of the vector's position. [x1', x2', y1', y2', c1', c2'] 
 		for(position = 0; position < 6; position++)
 		{
-			functions[position] = der(position, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5], atof(argv[1]), atof(argv[2]), atof(argv[3]));
+			functions[position] = der(position, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5], o);
 			
 			//if Improved Euler's Method was chosen, then the computation of [x1 + (h/2)*x1',x2 + (h/2)*x2', y1 + (h/2)*y1', y2 + (h/2)*y2', c1 + (h/2)*c1', c2 + (h/2)*c2'] is also needed.
 			if(choice == 2)
 			{
-				functions[position] = der(position, solutions[0] + (h/2)*functions[position], solutions[1]+ (h/2)*functions[position], solutions[2]+ (h/2)*functions[position], solutions[3] + (h/2)*functions[position], solutions[4] + (h/2)*functions[position], solutions[5]+ (h/2)*functions[position], atof(argv[1]), atof(argv[2]), atof(argv[3]));
+				functions[position] = der(position, solutions[0] + (h/2)*functions[position], solutions[1]+ (h/2)*functions[position], solutions[2]+ (h/2)*functions[position], solutions[3] + (h/2)*functions[position], solutions[4] + (h/2)*functions[position], solutions[5]+ (h/2)*functions[position], o);
 			}
 		}
 

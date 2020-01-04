@@ -63,17 +63,6 @@ int main(int argc, char * argv[])
 {
 	//The vector [fx, fy, nz] is now described by a closed-loop automatic control algorithm so the functions are changed accordingly.
 
-	//Open file for data plotting.
-	FILE *plot_data;
-
-	printf("Opening file...\n");
-
-	//If anything goes bad return -1.
-	if((plot_data = fopen("plot_data_1d.txt", "w")) == NULL)
-	{
-		return 1;
-	}
-
 
 	//Starting values of [x1, x2, y1, y2, c1, c2].
 	long double  solutions[6] = {0.0, 0.0, -3.496, 0.0, 0.0, 0.0};
@@ -92,6 +81,28 @@ int main(int argc, char * argv[])
 		printf("Please enter 1 or 2...\nChoice: ");
 	}
 	while(choice == 1 && choice == 2);
+
+		//Open file for data plotting.
+	FILE *plot_data;
+
+	printf("Opening file...\n");
+
+	if(choice == 1)
+	{
+		//If anything goes bad return -1.
+		if((plot_data = fopen("plot_data_nl-e-cl.txt", "w")) == NULL)
+		{
+			return 1;
+		}
+	}
+	else
+	{
+		//If anything goes bad return -1.
+		if((plot_data = fopen("plot_data_nl-i-cl.txt", "w")) == NULL)
+		{
+			return 1;
+		}
+	}
 
 	int k; //Number of loops.
 	for(k = 0; k<=6000; k++)//For 6000 loops (We want time equal to 600 and the step is 0.1)
