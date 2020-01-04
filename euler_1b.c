@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
 		{
 			functions[position] = call_fun(position, solutions[0], solutions[1], solutions[2], solutions[3], solutions[4], solutions[5], atof(argv[1]), atof(argv[2]), atof(argv[3]));
 			
-			//if Implroved Euler's Method was chosen, then the computation of [x1 + (h/2)*x1',x2 + (h/2)*x2', y1 + (h/2)*y1', y1 + (h/2)*y2', c1 + (h/2)*c1', c1 + (h/2)*c2'] is also needed.
+			//if Improved Euler's Method was chosen, then the computation of [x1 + (h/2)*x1',x2 + (h/2)*x2', y1 + (h/2)*y1', y1 + (h/2)*y2', c1 + (h/2)*c1', c1 + (h/2)*c2'] is also needed.
 			if(choice == 2)
 			{
 				functions[position] = call_fun(position, solutions[0] + (h/2)*functions[position], solutions[1]+ (h/2)*functions[position], solutions[2]+ (h/2)*functions[position], solutions[3] + (h/2)*functions[position], solutions[4] + (h/2)*functions[position], solutions[5]+ (h/2)*functions[position], atof(argv[1]), atof(argv[2]), atof(argv[3]));
