@@ -25,5 +25,3 @@ col4 = y(t).
 col5 = y'(t).
 col6 = c(t).
 col7 = c'(t).
-
-Run Plotting.m in Matlab to draw the plots of the files that are created through the programs.
