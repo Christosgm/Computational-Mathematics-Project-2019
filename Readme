@@ -1,17 +1,21 @@
-Compile using the command: gcc -o filename filename.c -lm
+Compile using the command: gcc -o filename filename.c -lquadmath.
 
-euler_1b.c runs without arguments.
-euler_1d.c runs without arguments.
+After comparing the initial program's values with those of a simple Matlab script, 
+it is evident for the calculations needed, the maximum of 80-bit precision that C can
+provide with long double is not enough. Quadmath library is needed to support 128-bit float
+precision with _Float128. So you must have it installed to compile the C scripts.
 
-Both programs output a .txt file with the data for the plots of the chosen method.
+All programs output a .txt file with the data for the plots of the chosen method.
 
 .txt name structure: plot_data_<type>_<method>_<type of loop and axis>
 
-nl: non-linear.
+l:Linear.
+nl: Non-linear.
 e: Euler's method.
 i: Improved Euler's Method.
-cl: closed-loop.
-o<axis>: open-loop for <axis> axis.
+analytic: Analytic solution.
+cl: Closed-loop.
+o<axis>: Open-loop for <axis> axis.
 
 .txt file structure:
 col1 = time.
@@ -23,18 +27,3 @@ col6 = c(t).
 col7 = c'(t).
 
 Run Plotting.m in Matlab to draw the plots of the files that are created through the programs.
-
-//TODO
-Problem 1
-a)Write how the functions came to be(in pdf form). //Explain the number deviation due to arithmetic accumulative errors!
-b)DONE.
-c)Write how the functions came to be(in pdf form).
-d)DONE.
-e)DONE.
-
-Problem 2
-a)Not Started yet.
-b)Not Started yet.
-c)Not Started yet.
-d)1c Solved for (6)
-e)Not Started yet.
