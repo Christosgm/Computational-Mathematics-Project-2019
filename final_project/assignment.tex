@@ -1,0 +1,338 @@
+\documentclass{article}
+ 
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta}
+\usepackage{graphicx}
+\addto\captionsenglish{\renewcommand{\figurename}{Εικόνα}}
+\addto\captionsenglish{\renewcommand{\contentsname}{Περιεχόμενα}}
+\graphicspath{ {./images/} }
+
+ 
+
+\begin{document}
+ 
+\title{Εργασία Υπολογιστικών Μαθηματικών 2019}
+\author{Χρήστος Γεωργίου Μουσσές\\Σωτηρία Δουλγεράκη\\Πασχάλης Πιπίδης}
+\date{}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Εξισώσεις}
+
+Το σύστημά μας περιγράφεται από τις παρακάτω τρεις διαφορικές εξισώσεις δεύτερης τάξης: 
+
+\begin{equation}
+(m + 3m_a)(cos(\psi)\ddot{x} - sin(\psi)\dot{\psi}\dot{x} + cos(\psi)\dot{\psi}\dot{y}) = f_x - D_x|\dot{x}|\dot{x}
+\end{equation}
+
+\begin{equation}
+(m + 3m_a)(cos(\psi)\ddot{y} - cos(\psi)\dot{\psi}\dot{x} - sin(\psi)\dot{\psi}\dot{y}) = f_y - D_y|\dot{y}|\dot{y}
+\end{equation}
+
+\begin{equation}
+m_z\ddot{\psi} = n_z - D_\psi|\dot{\psi}|\dot{\psi}
+\end{equation}
+
+\section{Μέθοδοι Ολοκλήρωσης}\
+
+Για να χρησιμοποιήσουμε τη μέθοδο Euler και την τροποποιημένη μέθοδο Euler χρειαζόμαστε διαφορικές εξισώσεις πρώτης τάξης, οπότε χρησιμοποιούμε τις νέες μεταβλητές:
+
+\[
+x_1 = x
+\]
+\[
+y_1 = y
+\]
+\[
+\psi_1 = \psi
+\]
+και
+\[
+x_2 = \dot{x_1} = \dot{x} 
+\]
+\[
+y_2 = \dot{y_1} = \dot{y} 
+\]
+\[
+\psi_2 = \dot{\psi_1} = \dot{\psi} 
+\]
+\\\\\\\\
+Με τις νέες μεταβλητές, η εξίσωση (1) μετατρέπεται στο παρακάτω σύστημα δύο διαφορικών εξισώσεων πρώτης τάξης:
+
+\begin{equation}
+\dot{x_1} = x_2
+\end{equation}
+
+\begin{equation}
+\dot{x_2} = tan(\psi_1)\psi_2x_2 - \psi_2y_2 + \frac{f_x - D_x|x_2|x_2}{(m + 3m_a)cos(\psi_1)} 
+\end{equation}
+
+Αντίστοιχα η (2) και η (3) μετατρέπονται σε:
+
+\begin{equation}
+\dot{y_1} = y_2
+\end{equation}
+
+\begin{equation}
+\dot{y_2} = tan(\psi_1)\psi_2y_2 + \psi_2x_2 + \frac{f_y - D_y|y_2|y_2}{(m + 3m_a)cos(\psi_1)} 
+\end{equation}
+\\
+και
+\\
+\begin{equation}
+\dot{\psi_1} = \psi_2
+\end{equation}
+
+\begin{equation}
+\dot{\psi_2} = \frac{n_z - D_\psi|\psi_2|\psi_2}{m_z} 
+\end{equation}
+
+\subsection{Μέθοδος Euler}
+Στη μέθοδο Euler, η λύση του συστήματος πρώτης τάξης \(\dot{y}(t) = f(t, y(t))\) με αρχική συνθήκη \(y(0)\), στις χρονικές στιγμές \(t = kh, k = 0, 1, 2...\) προσεγγίζεται από τη σχέση \(y(k+1) = y(k) + hf(hk, y(k))\) όπου \(y(k) = y(t = kh), k = 0, 1, 2...\) και \(h\) το βήμα ολοκλήρωσης.
+\\\\
+Για το σύστημα των εξισώσεων (4) έως (9), η εφαρμογή της παραπάνω σχέσης δίνει:
+
+\[x_1(k+1) = x_1(k) + hx_2(k)\]
+\[x_2(k+1) = x_2(k) + h[tan(\psi_1(k))\psi_2(k)x_2(k) - \psi_2(k)y_2(k) + \frac{f_x - D_x|x_2(k)|x_2(k)}{(m + 3m_a)cos(\psi_1(k))}]\]
+
+\[ y_1(k+1)   = y_1(k) + hy_2(k)   \]
+\[y_2(k+1) = y_2(k) + h[tan(\psi_1(k))\psi_2(k)y_2(k) + \psi_2(k)x_2(k) + \frac{f_y - D_y|y_2(k)|y_2(k)}{(m + 3m_a)cos(\psi_1(k))}]\]
+
+
+\[ \psi_1(k+1)   = \psi_1(k) + h\psi_2(k)   \]
+\[ \psi_2(k+1) = \psi_2(k) + h[\frac{n_z - D_\psi|\psi_2(k)|\psi_2(k)}{m_z}]\]
+
+όπου \(f_x, f_y, n_z\) είναι σταθερά.
+
+\subsection{Τροποποιημένη Μέθοδος Euler}
+Στην τροποποιημένη μέθοδο Euler, η λύση του συστήματος πρώτης τάξης \(\dot{y}(t) = f(t, y(t))\) με αρχική συνθήκη \(y(0)\), στις χρονικές στιγμές \(t = kh, k = 0, 1, 2...\) προσεγγίζεται από τη σχέση \(y(k+1) = y(k) + hf(kh + \frac{h}{2}, y(k) + \frac{h}{2}f(kh, y(k)))\) όπου \(y(k) = y(t = kh), k = 0, 1, 2...\) και \(h\) το βήμα ολοκλήρωσης.
+\\\\
+Για το σύστημα των εξισώσεων (4) έως (9), η εφαρμογή της παραπάνω σχέσης γίνεται σε δύο βήματα:
+\\\\
+Πρώτα υπολογίζεται το τμήμα \(y(k) + \frac{h}{2}f(kh, y(k))\) από τις σχέσεις: 
+\[g_1(k) = x_1(k) + \frac{h}{2}x_2(k)\]
+\[g_2(k) = x_2(k) + \frac{h}{2}[tan(\psi_1(k))\psi_2(k)x_2(k) - \psi_2(k)y_2(k) + \frac{f_x - D_x|x_2(k)|x_2(k)}{(m + 3m_a)cos(\psi_1(k))}]\]
+
+\[ g_3(k)   = y_1(k) + \frac{h}{2}y_2(k)   \]
+\[g_4(k) = y_2(k) + \frac{h}{2}[tan(\psi_1(k))\psi_2(k)y_2(k) + \psi_2(k)x_2(k) + \frac{f_y - D_y|y_2(k)|y_2(k)}{(m + 3m_a)cos(\psi_1(k))}]\]
+
+
+\[ g_5(k)   = \psi_1(k) + \frac{h}{2}\psi_2(k)   \]
+\[ g_6(k) = \psi_2(k) + \frac{h}{2}[\frac{n_z - D_\psi|\psi_2(k)|\psi_2(k)}{m_z}]\]
+\\
+και στη συνέχεια το \(y(k) + hf(kh + \frac{h}{2}, y(k) + \frac{h}{2}f(kh, y(k)))\) υπολογίζεται από τις σχέσεις:
+
+\[x_1(k+1) = x_1(k) + hg_2(k)\]
+\[x_2(k+1) = x_2(k) + h[tan(g_5(k))g_6(k)g_2(k) - g_6(k)g_4(k) + \frac{f_x - D_x|g_2(k)|g_2(k)}{(m + 3m_a)cos(g_5(k))}]\]
+
+\[ y_1(k+1)   = y_1(k) + hg_4(k)   \]
+\[y_2(k+1) = y_2(k) + h[tan(g_5(k))g_6(k)g_4(k) + g_6(k)g_2(k) + \frac{f_y - D_y|g_4(k)|g_4(k)}{(m + 3m_a)cos(g_5(k))}]\]
+
+
+\[ \psi_1(k+1)   = \psi_1(k) + hg_6(k)   \]
+\[ \psi_2(k+1) = \psi_2(k) + h[\frac{n_z - D_\psi|g_6(k)|g_6(k)}{m_z}]\]
+
+βάζοντας τα \(g_1(k), g_2(k), g_3(k), g_4(k), g_5(k), g_6(k)\) στη θέση των \(x_1(k), x_2(k), y_1(k), y_2(k), \psi_1(k), \psi_2(k)\), αντίστοιχα.
+
+\subsection{Προσoμοίωση}
+Προσομοιώθηκε το παραπάνω σύστημα εξισώσεων σε γλώσσα προγραμματισμού C και έγινε εξαγωγή των αποτελεσμάτων σε αρχεία ASCII τα οποία στη συνέχεια εισήχθησαν στο MATLAB για την απεικόνιση των γραφικών παραστάσεων.
+\\\\
+Οι γραφικές παραστάσεις που παρατίθενται στη συνέχεια, αφορούν τις τρείς παρακάτω περιπτώσεις τιμών για τις εισόδους του συστήματος:
+\[[f_x, f_y, n_z]^T = [3496, 0, 0]^T\]
+\[[f_x, f_y, n_z]^T = [0, -3496, 0]^T\]
+\[[f_x, f_y, n_z]^T = [0, 0, -3496]^T\] 
+ 
+Και στις τρείς περιπτώσεις οι αρχικές συνθήκες που χρησιμοποιήθηκαν είναι ίδιες:
+\[x(0) = 0.3496\]
+\[\dot{x}(0) = 0\]
+\[y(0) = 0\]
+\[\dot{y}(0) = 0\]
+\[\psi(0) = 0\]
+\[\dot{\psi}(0) = 0\]
+Οι παράμετροι του συστήματος υπολογίστηκαν με \(Α.Μ = 3496\)\footnote{\[A.M = \frac{4206 + 3218 + 3064}{3} = 3496\]} και δίνονται παρακάτω:
+\[D_x = 11835\]
+\[D_y = 8339\]
+\[D_\psi = 15331\]
+\[m = 425000\]
+\[m_z = 357000000\]
+\[m_\alpha = 113000\]
+Ο κώδικας των προγραμμάτων βρίσκεται στο παράρτημα.
+
+\subsection{Γραφικές Παραστάσεις}
+Σε καθεμία από τις περιπτώσεις παρουσιάζονται μόνο οι μη μηδενικές καταστάσεις του συστήματος ενώ οι υπόλοιπες παραμένουν μηδέν σε όλη τη διάρκεια της προσομοίωσης γιατί οι αντίστοιχες είσοδοι είναι μηδέν όπως και οι αρχικές συνθήκες.
+\subsubsection{Περίπτωση Μεταβολής μόνο της εισόδου \(f_x\)}
+Παρουσιάζεται η μεταβολή των \(x_1(t)\) και \(x_2(t)\) με το χρόνο. Για τις μεθόδους Euler και τροποποιημένη Euler, επειδή οι διαφορές είναι μικρές παρουσιάζεται στις εικόνες \ref{l_2} και \ref{l_4} μια μεγέθυνση σε μια περιοχή έτσι ώστε να είναι ορατές οι διαφορές τους. 
+
+\subsubsection{Περίπτωση Μεταβολής μόνο της εισόδου \(f_y\)}
+Παρουσιάζεται η μεταβολή των \(y_1(t)\) και \(y_2(t)\) με το χρόνο. Παρουσιάζεται στις εικόνες \ref{l_6} και \ref{l_8} μια μεγέθυνση σε μια περιοχή.
+
+\subsubsection{Περίπτωση Μεταβολής μόνο της εισόδου \(n_z\)}
+Παρουσιάζεται η μεταβολή των \(\psi_1(t)\) και \(\psi_2(t)\) με το χρόνο. Παρουσιάζεται στις εικόνες \ref{l_10} και \ref{l_12} μια μεγέθυνση σε μια περιοχή.
+
+\clearpage
+
+\begin{figure}[bh!]
+ \centering
+\includegraphics[scale = 0.7]{fxEuler_x1}
+\caption{Μεταβολή της $x_1(t)$ για Euler και τροποποιημένη
+ Euler (οι διαφορές είναι μικρές)}
+\end{figure}
+
+\begin{figure}[h!]
+ \centering
+\includegraphics[scale = 0.7]{fxEuler_x1_zoom}
+\caption{Μεταβολή της $x_1(t)$ για Euler και τροποποιημένη Euler (μεγέθυνση)}
+\label{l_2}
+\end{figure}
+\clearpage
+
+\clearpage
+\begin{figure}[h!]
+ \centering
+\includegraphics[scale = 0.7]{fxEuler_x2}
+\caption{Μεταβολή της $x_2(t)$ για Euler και τροποποιημένη Euler (οι διαφορές είναι μικρές)}
+\end{figure}
+
+
+\begin{figure}[h!]
+ \centering
+\includegraphics[scale = 0.7]{fxEuler_x2_zoom}
+\caption{Μεταβολή της $x_2(t)$ για Euler και τροποποιημένη Euler (μεγέθυνση)}
+\label{l_4}
+\end{figure}
+\clearpage
+
+\clearpage
+\begin{figure}[h!]
+ \centering
+\includegraphics[scale = 0.7]{fyEuler_y1}
+\caption{Μεταβολή της $y_1(t)$ για Euler και τροποποιημένη
+ Euler (οι διαφορές είναι μικρές)}
+\end{figure}
+
+\begin{figure}[h!]
+ \centering
+\includegraphics[scale = 0.7]{fyEuler_y1_zoom}
+\caption{Μεταβολή της $y_1(t)$ για Euler και τροποποιημένη Euler (μεγέθυνση)}
+\label{l_6}
+\end{figure}
+\clearpage
+
+\clearpage
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 0.7]{fyEuler_y2}
+\caption{Μεταβολή της $y_2(t)$ για Euler και τροποποιημένη Euler (οι διαφορές είναι μικρές)}
+\end{figure}
+
+
+\begin{figure}[h!]
+ \centering
+\includegraphics[scale = 0.7]{fyEuler_y2_zoom}
+\caption{Μεταβολή της $y_2(t)$ για Euler και τροποποιημένη Euler (μεγέθυνση)}
+\label{l_8}
+\end{figure}
+\clearpage
+
+\clearpage
+\begin{figure}[h!]
+\includegraphics[scale = 0.7]{nzEuler_c1}
+\caption{Μεταβολή της $\psi_1(t)$ για Euler και τροποποιημένη
+ Euler (οι διαφορές είναι μικρές)}
+\end{figure}
+
+\begin{figure}[h!]
+\includegraphics[scale = 0.7]{nzEuler_c1_zoom}
+\caption{Μεταβολή της $\psi_1(t)$ για Euler και τροποποιημένη Euler (μεγέθυνση)}
+\label{l_10}
+\end{figure}
+\clearpage
+
+\clearpage
+\begin{figure}[h!]
+\includegraphics[scale = 0.5]{nzEuler_c2}
+\caption{Μεταβολή της $\psi_2(t)$ για Euler και τροποποιημένη Euler (οι διαφορές είναι μικρές)}
+\end{figure}
+
+\begin{figure}[h!]
+\includegraphics[scale = 0.5]{nzEuler_c2_zoom}
+\caption{Μεταβολή της $\psi_2(t)$ για Euler και τροποποιημένη Euler (μεγέθυνση)}
+\label{l_12}
+\end{figure}
+\clearpage
+
+\section{Σύστημα αυτομάτου ελέγχου κλειστού βρόχου}
+
+Χρησιμοποιώντας για τις εισόδους τους παρακάτω ελεγκτές αναλογικού διαφορικού τύπου στις εξισώσεις (4)-(9) :
+
+\[f_x = K_{px}(x_{des} - x) - K_{dx}\dot{x} \]
+\[f_y = K_{py}(y_{des} - y) - K_{dy}\dot{y} \]
+\[n_z = K_{p\psi}(\psi_{des} - \psi) - K_{d\psi}\dot{\psi} \]
+
+και αναδιατυπώνοντας, χρησιμοποιώντας τις νέες μεταβλητές \(x_1, x_2, y_1, y_2, \psi_1, \psi_2\) όπως και πριν, καταλήγουμε στο παρακάτω σύστημα κλειστού βρόγχου διαφορικών εξισώσεων πρώτης τάξης:
+
+
+
+\begin{equation}
+\dot{x_1} = x_2
+\end{equation}
+
+\begin{equation}
+\dot{x_2} = tan(\psi_1)\psi_2x_2 - \psi_2y_2 + \frac{K_{px}(x_{des} - x_1) - K_{dx}x_2 - D_x|x_2|x_2}{(m + 3m_a)cos(\psi_1)} 
+\end{equation}
+
+\begin{equation}
+\dot{y_1} = y_2
+\end{equation}
+
+\begin{equation}
+\dot{y_2} = tan(\psi_1)\psi_2y_2 + \psi_2x_2 + \frac{K_{py}(y_{des} - y_1) - K_{dy}y_2 - D_y|y_2|y_2}{(m + 3m_a)cos(\psi_1)} 
+\end{equation}
+
+\begin{equation}
+\dot{\psi_1} = \psi_2
+\end{equation}
+
+\begin{equation}
+\dot{\psi_2} = \frac{K_{p\psi}(\psi_{des} - \psi_1) - K_{d\psi}\psi_2  - D_\psi|\psi_2|\psi_2}{m_z} 
+\end{equation}
+
+\subsubsection{Προσομοίωση}
+Όπως και πριν, χρησιμοποιώντας τον ίδιο κώδικα σε C, όπου ενσωματώθηκαν οι αλλαγές των εξισώσεων, προσομοιώθηκαν οι μέθοδοι Euler και τροποποιημένη Euler. Oι αρχικές συνθήκες που χρησιμοποιήθηκαν είναι:
+\[x(0) = 0\]
+\[\dot{x}(0) = 0\]
+\[y(0) = -3,496\]
+\[\dot{y}(0) = 0\]
+\[\psi(0) = 0\]
+\[\dot{\psi}(0) = 0\]
+Οι παράμετροι του συστήματος και οι παράμετροι του ελεγκτή δίνονται παρακάτω:
+\[D_x = 15331\]
+\[D_y = 11835\]
+\[D_\psi = 11835\]
+\[m = 425000\]
+\[m_z = 357000000\]
+\[m_\alpha = 113000\]
+\[K_{px} = 77480\]
+\[K_{dx} = 5000000\]
+\[K_{py} = 60000\]
+\[K_{dy} = 4650400\]
+\[K_{p\psi} = 50000\]
+\[K_{d\psi} = 7000000\]
+
+Οι επιθυμητές τελικές τιμές για τα \(x, y, \psi\) είναι αντίστοιχα: 
+
+\[x_{des} = 34.96\]
+\[y_{des} = -34.96\]
+\[\psi_{des} = 0.3496\]
+
+\subsubsection{Γραφικές Παραστάσεις}
+Δίνονται στη συνέχεια, οι μεταβολές όλων των καταστάσεων απ' όπου βλέπουμε οτι πράγματι τα \[x, y, \psi\] τείνουν ασυμπτωτικά στις επιθυμητές τιμές και για τις δύο μεθόδους επίλυσης. 
+
+
+
+\end{document}
